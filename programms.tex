@@ -1,4 +1,10 @@
 \documentclass[12pt]{article}
+\usepackage{lipsum}
+
+\makeatletter
+\def\CTEX@section@format{\Large\bfseries}
+\makeatother
+
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -10,7 +16,7 @@
 \begin{center} \large \bf
 Мехмат. Сошников Владимир, группа 410.\\
 Численное моделирование нестационарного одномерного течения газа с использованием неявной последовательной разностной схемы А.Г. Соколова   ($u$, $\rho$). 
-
+\end{center}
 
 \section{Постановка задачи}
 
@@ -123,7 +129,35 @@ F^{(-1)}, \text {если } V \geq 0
 $$
 
 \subsection{Схема в веденных обозначениях}
-ыы
+
+    $ \left\{ \begin{array}{l}
+H_{ \bar s} V_{t}+H_{\bar s} \delta\{\hat{V}, V\}+\frac{\gamma}{\gamma-1} H_{\bar{s}}\left((H)^{\gamma-1}\right)_{\bar x}=\mu \hat{V}_{x \bar{x}}+H_{\bar{s}} f, \quad \text { при } H_{\bar{s}} \neq 0 \quad (1)\\ \\
+\hat{V}=0, \quad \text { при } H_{\bar{s}}=0 \quad (2) \\ \\
+0<m<M, n \geq 0 \\ \\
+\hat{V}_{0}=\hat{V}_{M}=0, \quad (3)\\ \\
+H_{t}+(\sigma\{\hat{H}, \hat{V}\} \hat{V})_{x}=0,  \quad 0 \leq m<M, n \geq 0 \quad (4)
+\end{array}
+\right.
+$
+
 \subsection{Поточечная запись схемы}
-\end{center}
+$
+  \left \{
+    \begin{array}{l}
+      V_{m-1}^{n+1} (-\frac{\tau}{4h} (V_{m}^{n} + |V_{m}^{n}|) (H_{m}^{n} + H_{m - 1} ^{n}) - \frac {\tau \mu} {h^{2}}) \, + \\ \\ 
+      + \,V_{m}^{n + 1} (\frac{H_{m}^{n} + H_{m - 1} ^ {n}}{2} + \frac{2 \tau \mu} {h^{2}} + \frac{\tau}{2h} |V_{m}^{n}|(H_{m}^{n} + H_{m -  1} ^ {n})) +\\ \\
+      + \,V_{m+1}^{n+1} (\frac {\tau}{4h} (V_{m}^{n} - |V_{m}^{n}|) (H_{m}^{n} + H_{m-1}^{n}) - \frac{\tau \mu} {h^{2}})  = \\   \\
+      =\, V_{m}^{n} \frac{H_{m}^{n} + H_{m - 1}^{n}} {2} - \frac {\tau \gamma}{2h (\gamma - 1)} (H_{m}^{n} + H_{m - 1}^{n}) ((H_{m}^{n})^{\gamma - 1} - 
+      (H_{m - 1}^{n})^{\gamma - 1}) +  \\ \\ 
+      + \,\tau f_{m}^{n} \frac{H_{m}^{n} + H_{m-1}^{n}}{2}, \quad \text{при} \, \frac{H_{m}^{n} + H_{m - 1}^{n}}{2} \neq 0 \quad (1) \\ \\
+      0<m<M, n \geq 0 \\ \\
+      V_{m}^{n+1} = 0, \quad \text{при} \, \frac{H_{m}^{n} + H_{m - 1}^{n}}{2} = 0 \quad (2)\\ \\
+      V_{0}^{n+1} = V_{M}^{n+1} = 0 \quad(3) \\ \\ 
+      H_{m-1}^{n+1} (-\frac{\tau}{2h} (V_{m}^{n+1} + |V_{m}^{n+1}|))  + \\ \\
+      \, + H_{m}^{n+1} (1 + \frac{\tau} {2h} (V_{m+1}^{n+1} + |V_{m+1}^{n+1}| - V_{m}^{n+1} + |V_{m}^{n+1}|)) +\\ \\
+      \, + H_{m+1}^{n+1} (\frac{\tau}{2h} (V_{m+1}^{n+1} - |V_{m+1}^{n+1}|)) =\\ \\
+      \, = \tau (f_{0})^{n}_{m} + H_{m}^{n},  \quad 0 \leq m<M, n \geq 0 \quad (4)
+    \end{array}  
+  \right .
+$
 \end{document}
