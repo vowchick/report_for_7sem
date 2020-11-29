@@ -7,6 +7,7 @@
 
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{diagbox}
 \usepackage{amsmath}
 \usepackage[english, russian]{babel}
 \usepackage{listings}
@@ -43,7 +44,7 @@
           \rho f
        $
      }
-   \\
+   \\\tag{*}
    \text 
      {
        $
@@ -86,7 +87,6 @@ $
 $
 Q_{\tau h}^{1/2} = \bar \omega_{\tau} \times \omega_{h}^{1/2}
 $
-
 
 Значение функции $g$ в узле (m, n) будем обозначать через $g_{n}^{m}$
 Для сокращения записей будем также использовать следующие обозначения:
@@ -160,4 +160,175 @@ $
     \end{array}  
   \right .
 $
+
+\section{Отладочный тест}
+\subsection{Постановка задачи}
+Зададим функции
+$$
+\begin{aligned}
+\tilde{\rho}(t, x) &=e^{t}(\cos (\frac{\pi x}{10})+1.5) \\
+\tilde{u}(t, x) &=\cos (2 \pi t) \sin \left(\pi(\frac{x}{10})^{2}\right)
+\end{aligned}
+$$
+Определим функции $f_{0}$ (отличную от нуля правую часть уравнения неразрывности) и $f$ следующим образом:
+$$
+\begin{array}{l}
+\frac{\partial \tilde{\rho}}{\partial t}+\frac{\partial \tilde{\rho} \tilde{u}}{\partial x}=f_{0} \\
+\tilde{\rho} \frac{\partial \tilde{u}}{\partial t}+\tilde{\rho} \tilde{u} \frac{\partial \tilde{u}}{\partial x}+\frac{\partial p}{\partial x}=\mu \frac{\partial^{2} \tilde{u}}{\partial x^{2}}+f \\
+p=p(\tilde{\rho})
+\end{array}
+$$
+Таким образом, дифференциальная задача для системы (*) с начальными и граничными условиями
+$$
+\begin{array}{l}
+\tilde{\rho}(0, x)=\cos (\pi x / 10)+1.5, x \in[0,10] \\
+\bar{u}(0, x)=\sin \left(\pi(x / 10)^{2}\right), x \in[0,10] \\
+\tilde{u}(t, 0)=u(t, 10)=0, t \in[0,1]
+\end{array}
+$$
+имеет гладкое точное решение в области $Q = [0,1] \times[0, 10]$, задаваемое функциями $\tilde{\rho}$
+и $\tilde{u}$.
+\\
+Учитывая выражение для производной произведения:
+$$
+\frac{\partial \tilde{\rho}\tilde{u}}{\partial x} = 
+\frac{\partial \tilde{\rho}}{\partial x}\tilde{u} + \frac{\partial \tilde{u}}{\partial x}\tilde{\rho}
+$$
+выпишем в явном виде функции, необходимые для подсчета функций $f$ и $f_{0}$:
+
+$$
+  \begin{array}{l}
+    \tilde{\rho}_{t} = \tilde{\rho} \\
+    \tilde{\rho}_{x} = -\frac{\pi}{10} e^{t} \sin (\frac{\pi x}{10}) \\
+    \tilde{u}_{x} = \frac{\pi x}{50} \cos (2 \pi t) \cos ( \pi (\frac{x}      {10})^{2}) \\
+    \tilde{u}_{t} = -2\pi \sin (2 \pi t) \sin (\pi (\frac{x}{10})^{2})\\
+    \frac{\partial p}{\partial x} = \gamma \tilde{\rho}^{\gamma - 1}     \tilde{\rho}_{x} \\
+    \frac{\partial^{2}\tilde{u}}{\partial x^{2}} = -\frac{\pi \cos (2 \pi t) (\pi x^{2} \sin (\frac{\pi x^{2}}{100}) - 50 \cos (\frac{\pi x^{2}}{100}))}{2500} 
+    \end{array}
+$$
+\subsection{Численные эксперименты}
+\subsubsection{Невязки в норме $C^{h}$}
+\noindent
+
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline
+    \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 8.285230e-02 & 3.080613e+00 & 3.699816e+01 & 2.840256e+02 \\ \hline
+0.01 & 3.293312e-03 & 1.714846e-03 & 1.638271e-03 & 1.632187e-03 \\ \hline
+0.001 & 3.836806e-03 & 1.939109e-03 & 1.788066e-03 & 1.773883e-03 \\ \hline
+0.0001 & 3.891207e-03 & 1.973442e-03 & 1.817514e-03 & 1.802784e-03 \\ \hline
+
+
+
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-1}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline
+    \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 7.815377e-01 & 9.646356e+00 & 2.593327e+02 & 7.603305e+02 \\ \hline
+0.01 & 2.201643e-03 & 2.038254e+00 & 2.228518e+01 & 2.744123e+03 \\ \hline
+0.001 & 2.696648e-03 & 3.896222e-04 & 2.144925e-04 & 2.049316e-04 \\ \hline
+0.0001 & 2.755748e-03 & 4.304076e-04 & 2.256746e-04 & 2.099311e-04 \\ \hline
+
+
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-2}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline
+    \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 6.873624e-01 & 8.658355e+01 & 9.797400e+02 & 8.549658e+03 \\ \hline
+0.01 & 2.098316e-03 & 5.667679e+00 & 7.078428e+01 & 5.507045e+02 \\ \hline
+0.001 & 2.585017e-03 & 2.366792e-04 & 3.859310e+00 & 4.209609e+01 \\ \hline
+0.0001 & 2.644665e-03 & 2.811675e-04 & 3.983411e-05 & 2.228885e-05 \\ \hline
+
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-3}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline
+    \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+      0.1 & 8.346097e-01 & 1.006808e+01 & 2.041265e+01 & 7.610519e+00 \\ \hline
+      0.01 & 5.311057e-02 & 4.851442e-02 & 4.812621e-02 & 4.808817e-02 \\ \hline
+      0.001 & 1.204427e-02 & 5.370461e-03 & 5.139162e-03 & 5.124456e-03 \\ \hline
+      0.0001 & 9.231614e-03 & 2.239485e-03 & 2.487148e-03 & 2.528856e-03 \\ \hline
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } H \text { при } \mu=10^{-1}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline
+    \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+      0.1 & 2.824735e+00 & 2.344242e+01 & 1.027078e+02 & 4.043054e+02 \\ \hline
+      0.01 & 5.360122e-02 & 2.228508e+01 & 6.714340e+02 & 7.169226e+02 \\ \hline
+      0.001 & 1.294647e-02 & 5.311395e-03 & 4.840166e-03 & 4.800066e-03 \\ \hline
+      0.0001 & 1.024173e-02 & 1.219743e-03 & 5.539551e-04 & 5.297192e-04 \\ \hline
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } H \text { при } \mu=10^{-2}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline 
+      \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+      0.1 & 2.536448e+00 & 4.668277e+01 & 1.660260e+02 & 6.397873e+02 \\ \hline
+      0.01 & 5.365330e-02 & 4.883634e+01 & 8.905963e+02 & 2.118093e+03 \\ \hline
+      0.001 & 1.304692e-02 & 5.356476e-03 & 1.461903e+02 & 7.312164e+02 \\ \hline
+      0.0001 & 1.035452e-02 & 1.296004e-03 & 5.311780e-04 & 4.839332e-04 \\ \hline
+
+  \end{tabular}
+  $
+  \text { Таблица 1: Ошибка решения для } H \text { при } \mu=10^{-3}$
+\end{center}
+\vfill
+\subsubsection{Невязки в норме $L_{2}^{h}$ }
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline 
+      \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 1.475580e-01 & 1.019468e+01 & 1.350498e+02 & 9.316197e+02 \\ \hline
+0.01 & 3.028202e-03 & 1.884408e-03 & 1.767828e-03 & 1.756156e-03 \\ \hline
+0.001 & 3.210045e-03 & 2.079068e-03 & 1.964051e-03 & 1.952539e-03 \\ \hline
+0.0001 & 3.214100e-03 & 2.083451e-03 & 1.968507e-03 & 1.957003e-03 \\ \hline
+\end{tabular}
+  $ \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-1}$
+\end{center}
+\vfill
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline 
+      \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 1.140342e+00 & 2.735513e+01 & 1.611362e+03 & 1.578020e+04 \\ \hline
+0.01 & 1.626927e-03 & 8.952561e+00 & 2.361110e+01 & 1.844710e+04 \\ \hline
+0.001 & 1.879508e-03 & 4.303917e-04 & 2.906447e-04 & 2.768192e-04 \\ \hline
+0.0001 & 1.891652e-03 & 4.413476e-04 & 3.015986e-04 & 2.877784e-04 \\ \hline
+\end{tabular}
+  $ \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-2}$
+    \end{center}
+\begin{center}
+  \begin{tabular}{ | l | l | l | l | l |}
+    \hline 
+      \backslashbox{$\tau$}{$h$} & 0.1 & 0.01 &0.001 & 0.0001 \\ \hline
+0.1 & 1.088811e+00 & 1.442646e+02 & 2.863084e+03 & 1.477274e+04 \\ \hline
+0.01 & 1.484128e-03 & 3.892218e+01 & 1.860994e+02 & 6.915444e+03 \\ \hline
+0.001 & 1.742462e-03 & 1.867017e-04 & 8.547429e+01 & 1.275444e+03 \\ \hline
+0.0001 & 1.756639e-03 & 1.989882e-04 & 4.521465e-05 & 3.107465e-05 \\ \hline
+\end{tabular}
+  $ \text { Таблица 1: Ошибка решения для } V \text { при } \mu=10^{-3}$
+    \end{center}
+\vfill
 \end{document}
