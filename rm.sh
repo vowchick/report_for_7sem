@@ -1,1 +1,1 @@
-rm programms.pdf programms.aux programms.log
+rm *.pdf *.aux *.log
